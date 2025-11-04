@@ -1,0 +1,285 @@
+.container {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+}
+
+.mainArea {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+
+.canvasWrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.canvasContainer {
+  flex: 1;
+  overflow: auto;
+  padding: 40px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  position: relative;
+}
+
+.canvasContainer::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+.canvasContainer::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 5px;
+}
+
+.canvasContainer::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 5px;
+}
+
+.canvasContainer::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+}
+
+.canvas {
+  position: relative;
+  background: #ffffff;
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.15),
+    0 0 0 1px rgba(0, 0, 0, 0.05);
+  border-radius: 12px;
+  transform-origin: top center;
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: visible;
+  min-width: 800px;
+  min-height: 600px;
+  margin: 0 auto;
+}
+
+.canvas.grid {
+  background-image:
+    linear-gradient(rgba(102, 126, 234, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(102, 126, 234, 0.08) 1px, transparent 1px);
+  background-size: 20px 20px;
+  background-position: -1px -1px;
+}
+
+.component {
+  cursor: grab;
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 4px;
+  z-index: 1;
+  overflow: visible;
+  position: relative;
+}
+
+.component::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  border-radius: 4px;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.component:hover {
+  z-index: 10;
+}
+
+.component:hover::before {
+  opacity: 1;
+  border-color: rgba(102, 126, 234, 0.3);
+}
+
+.component:hover .componentLabel {
+  opacity: 1 !important;
+}
+
+.component.selected {
+  z-index: 100;
+  box-shadow: 0 0 0 2px #667eea, 0 8px 24px rgba(102, 126, 234, 0.3);
+  animation: pulseSelection 2s ease-in-out infinite;
+}
+
+.component.selected::before {
+  opacity: 0;
+}
+
+.component.selected .componentLabel {
+  opacity: 1 !important;
+}
+
+@keyframes pulseSelection {
+  0%, 100% {
+    box-shadow: 0 0 0 2px #667eea, 0 8px 24px rgba(102, 126, 234, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 0 2px #764ba2, 0 8px 32px rgba(118, 75, 162, 0.4);
+  }
+}
+
+/* Resize Handles */
+.resizeHandle {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: #ffffff;
+  border: 2px solid #667eea;
+  border-radius: 50%;
+  z-index: 1000;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.4);
+}
+
+.resizeHandle:hover {
+  transform: scale(1.3);
+  background: #667eea;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.6);
+}
+
+.resizeHandle.nw {
+  top: -5px;
+  left: -5px;
+  cursor: nw-resize;
+}
+
+.resizeHandle.ne {
+  top: -5px;
+  right: -5px;
+  cursor: ne-resize;
+}
+
+.resizeHandle.sw {
+  bottom: -5px;
+  left: -5px;
+  cursor: sw-resize;
+}
+
+.resizeHandle.se {
+  bottom: -5px;
+  right: -5px;
+  cursor: se-resize;
+}
+
+.emptyCanvas {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: #718096;
+  max-width: 400px;
+  padding: 40px;
+}
+
+.emptyIcon {
+  font-size: 72px;
+  margin-bottom: 20px;
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.emptyCanvas h3 {
+  margin: 0 0 12px 0;
+  color: #2d3748;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.emptyCanvas p {
+  margin: 0;
+  color: #718096;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .canvasContainer {
+    padding: 24px;
+  }
+}
+
+@media (max-width: 768px) {
+  .mainArea {
+    flex-direction: column;
+  }
+
+  .canvasContainer {
+    padding: 16px;
+  }
+
+  .canvas {
+    border-radius: 8px;
+  }
+
+  .emptyCanvas {
+    padding: 24px;
+  }
+
+  .emptyIcon {
+    font-size: 48px;
+  }
+
+  .emptyCanvas h3 {
+    font-size: 20px;
+  }
+
+  .emptyCanvas p {
+    font-size: 14px;
+  }
+}
+
+/* Touch device optimizations */
+@media (hover: none) and (pointer: coarse) {
+  .component {
+    cursor: pointer;
+  }
+
+  .resizeHandle {
+    width: 14px;
+    height: 14px;
+  }
+
+  .resizeHandle.nw {
+    top: -7px;
+    left: -7px;
+  }
+
+  .resizeHandle.ne {
+    top: -7px;
+    right: -7px;
+  }
+
+  .resizeHandle.sw {
+    bottom: -7px;
+    left: -7px;
+  }
+
+  .resizeHandle.se {
+    bottom: -7px;
+    right: -7px;
+  }
+}
