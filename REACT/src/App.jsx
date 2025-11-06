@@ -12,23 +12,40 @@ import Toolbar from './components/Toolbar/Toolbar';
 import './App.css';
 
 const AppContent = () => {
-  const { currentMode, setCurrentMode, loadProjectData, clearProjectData } = useApp();
+  const { currentMode, setCurrentMode, loadProjectData, clearProjectData, projectName } = useApp();
   const { connectionStatus, projectData, lastMessage, sendMessage, reconnect } = useWebSocket();
 
   // Handle WebSocket messages
   useEffect(() => {
     if (lastMessage) {
-      console.log('[App] Received message:', lastMessage.type);
+      console.log('[App] Received message:', lastMessage.type, 'Current mode:', currentMode, 'Has project:', !!projectName);
 
       switch (lastMessage.type) {
         case 'project_initialized':
+          // Only switch on very first initialization (when we don't have a project yet)
+          if (!projectName) {
+            console.log('[App] Project initialized (first time) - switching to requirements');
+            loadProjectData(lastMessage.data, true);
+          } else {
+            console.log('[App] Project initialized (already loaded) - keeping current mode');
+            loadProjectData(lastMessage.data, false);
+          }
+          break;
+
         case 'project_switched':
+          // When user switches projects, go to requirements
+          console.log('[App] Project switched - switching to requirements');
+          loadProjectData(lastMessage.data, true);
+          break;
+
         case 'files_updated':
-          loadProjectData(lastMessage.data);
+          // Never switch mode when files are updated - just update data
+          console.log('[App] Files updated - keeping current mode:', currentMode);
+          loadProjectData(lastMessage.data, false);
           break;
 
         case 'canvas_mode_ready':
-          loadProjectData(lastMessage.data);
+          loadProjectData(lastMessage.data, false);
           setCurrentMode('canvas');
           break;
 
@@ -48,7 +65,7 @@ const AppContent = () => {
           break;
       }
     }
-  }, [lastMessage, loadProjectData, clearProjectData, setCurrentMode]);
+  }, [lastMessage, loadProjectData, clearProjectData, setCurrentMode, currentMode, projectName]);
 
   // Update mode when connection is established
   useEffect(() => {

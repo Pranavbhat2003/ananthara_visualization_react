@@ -1,0 +1,86 @@
+.container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: #f5f5f5;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.controls {
+  display: flex;
+  gap: 10px;
+  padding: 12px 16px;
+  background: #ffffff;
+  border-bottom: 1px solid #e0e0e0;
+  align-items: center;
+}
+
+.controlBtn {
+  padding: 6px 12px;
+  border: 1px solid #d0d0d0;
+  background: #ffffff;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+  transition: all 0.2s;
+}
+
+.controlBtn:hover {
+  background: #f0f0f0;
+  border-color: #a0a0a0;
+}
+
+.controlBtn:active {
+  background: #e0e0e0;
+}
+
+.zoomLevel {
+  font-size: 13px;
+  color: #666;
+  font-weight: 500;
+  margin-left: 8px;
+}
+
+.helpText {
+  margin-left: auto;
+  font-size: 12px;
+  color: #999;
+  font-style: italic;
+}
+
+.icon {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.diagramContainer {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+  background: #ffffff;
+}
+
+.diagram {
+  width: 100%;
+  height: 100%;
+  transition: transform 0.1s ease-out;
+}
+
+.diagram :global(.c4-element) {
+  transition: opacity 0.2s;
+}
+
+.diagram :global(.c4-element):hover {
+  opacity: 0.9;
+  cursor: pointer;
+}
+
+.diagram :global(.c4-relationship) {
+  transition: opacity 0.2s;
+}
+
+.diagram :global(.c4-relationship):hover {
+  opacity: 0.7;
+}

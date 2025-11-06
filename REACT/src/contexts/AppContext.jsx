@@ -13,6 +13,7 @@ export const useApp = () => {
 export const AppProvider = ({ children, sendMessage }) => {
   // View modes
   const [currentMode, setCurrentMode] = useState('loading'); // 'loading' | 'requirements' | 'canvas'
+  const [isInitialLoad, setIsInitialLoad] = useState(true); // Track if this is the first load
 
   // Project data
   const [projectName, setProjectName] = useState('');
@@ -35,7 +36,7 @@ export const AppProvider = ({ children, sendMessage }) => {
   const [isPreviewMode, setIsPreviewMode] = useState(false);
 
   // Load project data from WebSocket
-  const loadProjectData = useCallback((data) => {
+  const loadProjectData = useCallback((data, shouldSwitchMode = false) => {
     if (data.project_name) setProjectName(data.project_name);
     if (data.requirements) setRequirements(data.requirements);
     if (data.ddd) setDdd(data.ddd);
@@ -54,9 +55,13 @@ export const AppProvider = ({ children, sendMessage }) => {
       setCurrentPageId(data.currentPageId);
     }
 
-    // If project is loaded, switch to requirements mode
-    if (data.project_name) {
+    // Only switch to requirements mode when explicitly requested
+    if (shouldSwitchMode && data.project_name) {
+      console.log('[AppContext] Switching to requirements mode (shouldSwitchMode=true)');
       setCurrentMode('requirements');
+      setIsInitialLoad(false);
+    } else {
+      console.log('[AppContext] NOT switching mode (shouldSwitchMode=false)');
     }
   }, []);
 

@@ -1,10 +1,13 @@
+import { useState } from 'react';
 import { useApp } from '../contexts/AppContext';
 import Card from '../components/common/Card';
 import Button from '../components/common/Button';
+import C4DiagramViewer from '../components/C4Diagram/C4DiagramViewer';
 import styles from './TechnicalArchitecture.module.css';
 
 const TechnicalArchitecture = ({ onRefresh }) => {
   const { technicalArchitecture, projectName } = useApp();
+  const [viewMode, setViewMode] = useState('diagram'); // 'diagram' or 'details'
 
   const {
     systemName = '',
@@ -18,6 +21,9 @@ const TechnicalArchitecture = ({ onRefresh }) => {
     deployment = {}
   } = technicalArchitecture || {};
 
+  // Check if we have C4 model data
+  const hasC4Model = technicalArchitecture?.model && technicalArchitecture?.views;
+
   return (
     <div className={styles.container}>
       <div className={styles.header}>
@@ -27,12 +33,38 @@ const TechnicalArchitecture = ({ onRefresh }) => {
             <p className={styles.subtitle}>System design and infrastructure for {projectName}</p>
           )}
         </div>
-        <Button onClick={onRefresh} variant="secondary" size="small">
-          Refresh
-        </Button>
+        <div className={styles.headerActions}>
+          {hasC4Model && (
+            <div className={styles.viewToggle}>
+              <button
+                className={`${styles.toggleBtn} ${viewMode === 'diagram' ? styles.active : ''}`}
+                onClick={() => setViewMode('diagram')}
+              >
+                Diagram View
+              </button>
+              <button
+                className={`${styles.toggleBtn} ${viewMode === 'details' ? styles.active : ''}`}
+                onClick={() => setViewMode('details')}
+              >
+                Details View
+              </button>
+            </div>
+          )}
+          <Button onClick={onRefresh} variant="secondary" size="small">
+            Refresh
+          </Button>
+        </div>
       </div>
 
       <div className={styles.content}>
+        {/* C4 Diagram View */}
+        {hasC4Model && viewMode === 'diagram' && (
+          <C4DiagramViewer c4Data={technicalArchitecture} />
+        )}
+
+        {/* Details View */}
+        {(!hasC4Model || viewMode === 'details') && (
+          <>
         {/* System Overview */}
         {(systemName || architectureStyle) && (
           <Card title="System Overview" padding="large" shadow>
@@ -288,7 +320,7 @@ const TechnicalArchitecture = ({ onRefresh }) => {
         )}
 
         {/* Empty State */}
-        {!systemName && layers.length === 0 && services.length === 0 && (
+        {!systemName && layers.length === 0 && services.length === 0 && !hasC4Model && (
           <Card padding="large" shadow>
             <div className={styles.emptyState}>
               <div className={styles.emptyIcon}>🏛️</div>
@@ -296,6 +328,8 @@ const TechnicalArchitecture = ({ onRefresh }) => {
               <p>System architecture and infrastructure details will appear here once defined.</p>
             </div>
           </Card>
+        )}
+          </>
         )}
       </div>
     </div>

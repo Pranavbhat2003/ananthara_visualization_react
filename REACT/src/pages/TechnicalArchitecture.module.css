@@ -19,6 +19,43 @@
   flex: 1;
 }
 
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.viewToggle {
+  display: flex;
+  gap: 0;
+  background: #f0f0f0;
+  border-radius: 6px;
+  padding: 4px;
+}
+
+.toggleBtn {
+  padding: 8px 16px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 4px;
+  transition: all 0.2s;
+  color: #666;
+}
+
+.toggleBtn:hover {
+  background: #e0e0e0;
+  color: #333;
+}
+
+.toggleBtn.active {
+  background: #ffffff;
+  color: #0066cc;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
 .title {
   font-size: 24px;
   font-weight: 600;
